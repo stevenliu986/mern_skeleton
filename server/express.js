@@ -21,8 +21,10 @@ import cors from "cors";
 import helmet from "helmet";
 
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// 对req.body的信息进行解析（如果express的版本>=4.17则可以用express代替）
+app.use(express.json());
+// 对表单进行解析（如果express的版本>=4.17则可以用express代替）
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(compress());
 app.use(helmet());
