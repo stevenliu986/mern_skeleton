@@ -1,3 +1,4 @@
+import "express-async-errors";
 import config from "./../config/config";
 import app from "./express";
 import mongoose from "mongoose";
