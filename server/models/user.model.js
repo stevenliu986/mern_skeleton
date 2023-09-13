@@ -68,6 +68,6 @@ UserSchema.path("hashed_password").validate(function () {
   }
 }, null);
 
-const UserModel = model("User", UserSchema);
+const User = model("User", UserSchema);
 
-export default UserModel;
+export default User;
