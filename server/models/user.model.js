@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
 
 const UserSchema = new Schema({
   name: {
@@ -18,55 +19,22 @@ const UserSchema = new Schema({
     default: Date.now,
   },
   updated: Date,
-  hashed_password: {
+  password: {
     type: String,
     required: "Password is required",
   },
-  salt: String,
 });
-
-// Handling the password string as a virtual field
-UserSchema.virtual("password")
-  .set(function (password) {
-    this._password = password;
-    this.salt = this.makeSalt();
-    this.hashed_password = this.encryptPassword(password);
-  })
-  .get(function () {
-    return this._password;
-  });
 
 // Encryption and authentication
 UserSchema.methods = {
-  authenticate: function (plainText) {
-    return this.encryptPassword(plainText) === this.hashed_password;
+  authenticate: function (password) {
+    return bcrypt.compare(password, this.password);
   },
 
-  encryptPassword: function (password) {
-    if (!password) {
-      return "";
-    }
-    try {
-      crypto.createHmac("sha1", this.salt).update(password).digest("hex");
-    } catch (error) {
-      return "";
-    }
-  },
-
-  makeSalt: function () {
-    return Math.round(new Date().valueOf() * Math.random()) + "";
+  encryptPassword: async function () {
+    this.password = await bcrypt.hash(this.password, 12);
   },
 };
-
-// Password field validation
-UserSchema.path("hashed_password").validate(function () {
-  if (this._password && this._password.length < 6) {
-    this.invalidate("password", "Password must be at least 6 characters long.");
-  }
-  if (this.isNew && !this._password) {
-    this.invalidate("password", "Password is required.");
-  }
-}, null);
 
 const User = model("User", UserSchema);
 
