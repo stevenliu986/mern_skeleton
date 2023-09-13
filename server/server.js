@@ -2,6 +2,7 @@ import config from "./../config/config";
 import app from "./express";
 import mongoose from "mongoose";
 import Template from "./../template";
+import userRouter from "./routes/user.routes";
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.mongoUri, {
@@ -16,6 +17,8 @@ mongoose.connection.on("error", () => {
 app.get("/", (req, res) => {
   res.status(200).send(Template());
 });
+
+app.use("/api", userRouter);
 
 app.listen(config.port, (err) => {
   if (err) {
