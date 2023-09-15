@@ -18,8 +18,10 @@ import cookieParser from "cookie-parser";
 import compress from "compression";
 import cors from "cors";
 import helmet from "helmet";
+import devBundle from "./devBundle";
 
 const app = express();
+devBundle.compile(app);
 // 对req.body的信息进行解析（如果express的版本>=4.17则可以用express代替）
 app.use(express.json());
 // 对表单进行解析（如果express的版本>=4.17则可以用express代替）
