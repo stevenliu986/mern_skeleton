@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", userRouter);
-app.use("/api", authRouter);
+app.use("/auth", authRouter);
 
 app.listen(config.port, (err) => {
   if (err) {
