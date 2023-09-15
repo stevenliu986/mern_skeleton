@@ -1,5 +1,4 @@
 import User from "../models/user.model";
-import bcrypt from "bcrypt";
 
 const getUserList = async (req, res) => {
   try {
@@ -16,22 +15,6 @@ const addNewUser = async (req, res) => {
   await user.encryptPassword();
   await user.save();
   return res.status(200).json(user);
-};
-
-const signIn = async (req, res) => {
-  const { email, password } = req.body;
-  const existingUser = await User.findOne({ email }).exec();
-  if (!existingUser) {
-    return res.status(401).json({ error: "Invalid email or password!" });
-  }
-  const isPasswordValid = await existingUser.authenticate(password);
-  if (!isPasswordValid) {
-    return res.status(401).json({ error: "Invalid email or password!" });
-  }
-  // 通常情况下要在这里向前端发个token
-  return res
-    .status(200)
-    .json({ name: existingUser.name, email: existingUser.email });
 };
 
 const updateUser = async (req, res) => {
@@ -58,4 +41,4 @@ const updateUser = async (req, res) => {
 //   }
 // };
 
-export { getUserList, addNewUser, signIn, updateUser };
+export { getUserList, addNewUser, updateUser };
