@@ -4,6 +4,7 @@ import app from "./express";
 import mongoose from "mongoose";
 import Template from "./../template";
 import userRouter from "./routes/user.routes";
+import authRouter from "./routes/auth.routes";
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.mongoUri, {
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", userRouter);
+app.use("/api", authRouter);
 
 app.listen(config.port, (err) => {
   if (err) {
