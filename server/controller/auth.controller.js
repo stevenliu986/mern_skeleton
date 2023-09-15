@@ -1,6 +1,7 @@
 import User from "../models/user.model";
 import jwt from "jsonwebtoken";
 import config from "../../config/config";
+import expressjwt from "express-jwt";
 
 const signIn = async (req, res) => {
   const { email, password } = req.body;
@@ -24,4 +25,23 @@ const signIn = async (req, res) => {
     return res.status(401).json({ error: "Email and password don't match." });
   }
 };
-export { signIn };
+
+const signOut = async (req, res) => {
+  res.clearCookies("t");
+  return res.status(200).json({ message: "Sign out successfully!" });
+};
+
+const requireSignIn = expressjwt({
+  secret: config.jwtSecret,
+  userProperty: "auth",
+});
+
+const hasAuthorization = async (req, res, next) => {
+  const authorized = req.profile && req.auth && req.profile._id == req.auth._id;
+  if (!authorized) {
+    return res.status(403).json({ message: "User not authorized" });
+  }
+  next();
+};
+
+export { signIn, signOut };
